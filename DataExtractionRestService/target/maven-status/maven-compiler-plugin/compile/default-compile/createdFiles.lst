@@ -1,0 +1,7 @@
+com/dataextraction/controller/Application.class
+com/dataextraction/persistence/IPanaceaDao.class
+com/dataextraction/persistence/PanaceaDaoImpl.class
+com/dataextraction/controller/RestServiceController.class
+com/dataextraction/model/GroupResponse.class
+com/dataextraction/model/User.class
+com/dataextraction/model/Contact.class
