@@ -5,46 +5,28 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-
 import org.bson.Document;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.dataextraction.model.Contact;
 import com.dataextraction.model.OlympicData;
 import com.dataextraction.model.User;
-import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
-import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 
 @Component("dataExtractionDao")
 public class DataExtractionDaoImpl implements IDataExtractionDao {
 
-	private MongoClient mongoClient;
-	private MongoDatabase db;
-
-	@PostConstruct
-	public void init() {
-		mongoClient = new MongoClient("localhost", 27017);
-
-		db = mongoClient.getDatabase("mydb");
-
-	}
-
-	@PreDestroy
-	public void destoy() {
-		mongoClient.close();
-
-	}
+	@Autowired
+	MongoFactory mongoFactory;
 
 	@Override
 	public void insertUser(User user) {
 
-		MongoCollection<Document> col = db.getCollection("users");
+		MongoCollection<Document> col = mongoFactory.getMongoDB().getCollection("users");
 		Document doc = new Document();
 
 		// BasicDBObjectBuilder docBuilder = BasicDBObjectBuilder.start();
@@ -70,7 +52,7 @@ public class DataExtractionDaoImpl implements IDataExtractionDao {
 
 	@Override
 	public List<User> getUsers() {
-		MongoCollection<Document> col = db.getCollection("users");
+		MongoCollection<Document> col = mongoFactory.getMongoDB().getCollection("users");
 
 		// col.findOneAndDelete(Filters.eq("_id", 4));
 
@@ -98,7 +80,7 @@ public class DataExtractionDaoImpl implements IDataExtractionDao {
 
 	@Override
 	public User getUserDetails(String userName) {
-		MongoCollection<Document> col = db.getCollection("users");
+		MongoCollection<Document> col = mongoFactory.getMongoDB().getCollection("users");
 
 		// col.findOneAndDelete(Filters.eq("_id", 4));
 
@@ -121,7 +103,7 @@ public class DataExtractionDaoImpl implements IDataExtractionDao {
 
 	@Override
 	public User login(String login, String password) {
-		MongoCollection<Document> col = db.getCollection("users");
+		MongoCollection<Document> col = mongoFactory.getMongoDB().getCollection("users");
 		Document myDoc = col.find(Filters.and(Filters.eq("userName", login), Filters.eq("password", password))).first();
 		if (myDoc != null) {
 			System.out.println(myDoc);
@@ -132,7 +114,7 @@ public class DataExtractionDaoImpl implements IDataExtractionDao {
 
 	@Override
 	public List<OlympicData> getOlympicData() {
-		MongoCollection<Document> col = db.getCollection("olympicWiners");
+		MongoCollection<Document> col = mongoFactory.getMongoDB().getCollection("olympicWiners");
 
 		// col.findOneAndDelete(Filters.eq("_id", 4));
 

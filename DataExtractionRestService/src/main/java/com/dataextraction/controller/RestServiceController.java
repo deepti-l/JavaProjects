@@ -13,34 +13,28 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dataextraction.model.GroupResponse;
 import com.dataextraction.model.OlympicData;
 import com.dataextraction.model.User;
-import com.dataextraction.persistence.IDataExtractionDao;
+import com.dataextraction.security.oauth2.service.IDataExtractionService;
 
 @RestController
+@RequestMapping("secured/")
 public class RestServiceController {
 
 	@Autowired
-	IDataExtractionDao dataExtractionDao;
+	IDataExtractionService dataExtractionService;
 
-	public IDataExtractionDao getPnaceaDao() {
-		return dataExtractionDao;
-	}
-
-	public void setPnaceaDao(IDataExtractionDao pnaceaDao) {
-		dataExtractionDao = pnaceaDao;
-	}
-
-	@RequestMapping(value = "/api/authenticate", method = RequestMethod.POST)
-	public GroupResponse<User> login(@RequestBody User request) {
-		GroupResponse<User> res = new GroupResponse<>();
-
-		User user = dataExtractionDao.login(request.getUserName(), request.getPassword());
-
-		List<User> list = new ArrayList<>();
-		list.add(user);
-		res.setItems(list);
-		res.setIsSuccess(true);
-		return res;
-	}
+	// @RequestMapping(value = "/api/authenticate", method = RequestMethod.POST)
+	// public GroupResponse<User> login(@RequestBody User request) {
+	// GroupResponse<User> res = new GroupResponse<>();
+	//
+	// User user = dataExtractionService.login(request.getUserName(),
+	// request.getPassword());
+	//
+	// List<User> list = new ArrayList<>();
+	// list.add(user);
+	// res.setItems(list);
+	// res.setIsSuccess(true);
+	// return res;
+	// }
 
 	@RequestMapping(value = "/api/users", method = RequestMethod.GET)
 	public GroupResponse<User> getUsers() {
@@ -48,7 +42,7 @@ public class RestServiceController {
 		res.setIsSuccess(true);
 
 		List<User> list = new ArrayList<>();
-		list = dataExtractionDao.getUsers();
+		list = dataExtractionService.getUsers();
 		res.setItems(list);
 		return res;
 	}
@@ -58,7 +52,7 @@ public class RestServiceController {
 		GroupResponse<User> res = new GroupResponse<>();
 		res.setIsSuccess(true);
 
-		dataExtractionDao.insertUser(request);
+		dataExtractionService.insertUser(request);
 
 		return res;
 	}
@@ -68,7 +62,7 @@ public class RestServiceController {
 		GroupResponse<User> res = new GroupResponse<>();
 		res.setIsSuccess(true);
 
-		User user = dataExtractionDao.getUserDetails(userName);
+		User user = dataExtractionService.getUserDetails(userName);
 		List<User> items = new ArrayList<>();
 		items.add(user);
 		res.setItems(items);
@@ -81,7 +75,7 @@ public class RestServiceController {
 		res.setIsSuccess(true);
 
 		List<OlympicData> list = new ArrayList<>();
-		list = dataExtractionDao.getOlympicData();
+		list = dataExtractionService.getOlympicData();
 		res.setItems(list);
 		return res;
 	}
